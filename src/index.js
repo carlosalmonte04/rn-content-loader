@@ -1,45 +1,40 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Animated, Text, Dimensions } from 'react-native';
+import React, { Component } from "react";
+import { View, StyleSheet, Animated, Text, Dimensions } from "react-native";
 import Svg, {
   Rect,
   Defs,
   LinearGradient,
   Stop,
   ClipPath,
-  G
-} from 'react-native-svg';
-import PropTypes from 'prop-types';
+  G,
+} from "react-native-svg";
+import PropTypes from "prop-types";
 
 class ClassSvg extends React.PureComponent {
-
   render() {
-    const { children } = this.props
+    const { children } = this.props;
 
-    return (
-      <Svg {...this.props}>
-        {children}
-      </Svg>
-    )
+    return <Svg {...this.props}>{children}</Svg>;
   }
 }
 
 const AnimatedSvg = Animated.createAnimatedComponent(ClassSvg);
-const { interpolate } = require('d3-interpolate');
+const { interpolate } = require("d3-interpolate");
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 class ContentLoader extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      offsetValues: ['-2', '-1.5', '-1'],
+      offsetValues: ["-2", "-1.5", "-1"],
       offsets: [
-        '0.0001',
-        '0.0002',
-        '0.0003' // Avoid duplicate value cause error in Android
+        "0.0001",
+        "0.0002",
+        "0.0003", // Avoid duplicate value cause error in Android
       ],
-      frequence: props.duration / 2
+      frequence: props.duration / 2,
     };
     this._isMounted = false;
     this._animate = new Animated.Value(0);
@@ -48,10 +43,10 @@ class ContentLoader extends Component {
 
   offsetValueBound(x) {
     if (x > 1) {
-      return '1';
+      return "1";
     }
     if (x < 0) {
-      return '0';
+      return "0";
     }
     return x;
   }
@@ -66,7 +61,7 @@ class ContentLoader extends Component {
     if (!this._isMounted) return;
     // setup interpolate
     let interpolator = interpolate(this.state, {
-      offsetValues: ['1', '1.5', '2']
+      offsetValues: ["1", "1.5", "2"],
     });
 
     // start animation
@@ -102,12 +97,12 @@ class ContentLoader extends Component {
     Animated.sequence([
       Animated.timing(this._animate, {
         toValue: 1,
-        duration: this.state.frequence
+        duration: this.state.frequence,
       }),
       Animated.timing(this._animate, {
         toValue: 0,
-        duration: this.state.frequence
-      })
+        duration: this.state.frequence,
+      }),
     ]).start(event => {
       if (event.finished) {
         this.loopAnimation();
@@ -115,9 +110,11 @@ class ContentLoader extends Component {
     });
   }
   render() {
+    const { height } = this.props;
+    
     return (
       <View style={{ marginBottom: 25 }}>
-        <AnimatedSvg width={width - 20} height={300}>
+        <AnimatedSvg width={width - 20} height={height}>
           <Defs>
             <LinearGradient
               id="grad"
@@ -170,17 +167,17 @@ ContentLoader.propTypes = {
   x1: PropTypes.string,
   y1: PropTypes.string,
   x2: PropTypes.string,
-  y2: PropTypes.string
+  y2: PropTypes.string,
 };
 ContentLoader.defaultProps = {
-  primaryColor: '#eeeeee',
-  secondaryColor: '#dddddd',
+  primaryColor: "#eeeeee",
+  secondaryColor: "#dddddd",
   duration: 2000,
   width: 300,
   height: 200,
-  x1: '0',
-  y1: '0',
-  x2: '100%',
-  y2: '0'
+  x1: "0",
+  y1: "0",
+  x2: "100%",
+  y2: "0",
 };
 export default ContentLoader;
